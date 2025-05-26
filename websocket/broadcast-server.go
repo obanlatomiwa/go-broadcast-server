@@ -1,7 +1,12 @@
 package websocket
 
 import (
+	"fmt"
+	"github.com/obanlatomiwa/go-broadcast-server/utils"
 	"log"
+	"net/http"
+	"os"
+	"os/signal"
 	"sync"
 )
 
@@ -18,6 +23,30 @@ type BroadCastServer struct {
 type Message struct {
 	clientId string
 	data     string
+}
+
+var server *BroadCastServer
+
+func InitiateBroadCast() {
+	fmt.Println("Initiate broadcast")
+
+	PORT := utils.GetValueFromConfigFile("APP_PORT")
+	server = NewBroadCastServer(PORT)
+	go server.StartBroadCast()
+
+	http.HandleFunc("/ws", func(w http.ResponseWriter, r *http.Request) {
+		StartWebsocketConnection(server, w, r)
+	})
+
+	err := http.ListenAndServe(fmt.Sprintf(":%s", PORT), nil)
+	if err != nil {
+		return
+	}
+}
+
+func StopBroadCast() {
+	stop := make(chan os.Signal, 1)
+	signal.Notify(stop, os.Interrupt)
 }
 
 func NewBroadCastServer(broadcastAddr string) *BroadCastServer {
@@ -79,4 +108,11 @@ func getMessage(clientId string, message *Message) []byte {
 		return []byte{}
 	}
 	return []byte(message.data)
+}
+
+func GetAllClients() {
+	fmt.Println("All clients connected to the broadcast server...")
+	for client := range server.clients {
+		fmt.Println(client.id)
+	}
 }

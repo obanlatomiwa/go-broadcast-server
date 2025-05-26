@@ -5,10 +5,10 @@ A server that can server messages to connected clients. It allows clients to con
 - It's a command line tool
   - `broadcast start` - starts the server
   - `broadcast stop` - stops the server
-  - `broadcast clients ls` - lists all the connected clients
+  - `broadcast client-ls` - lists all the connected clients
   - `broadcast remove client` - removes a client from receiving messages
 - The messages are persisted in a db
-  - `broadcast client messages ls` - returns all the historical messages from a client
+  - `broadcast messages-ls` - returns all the historical messages from a client
 
 
 ## Technologies
