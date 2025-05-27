@@ -1,8 +1,8 @@
 package cmd
 
 import (
-	broadCastServer "github.com/obanlatomiwa/go-broadcast-server/websocket"
-
+	"fmt"
+	"github.com/obanlatomiwa/go-broadcast-server/database"
 	"github.com/spf13/cobra"
 )
 
@@ -12,7 +12,14 @@ var messagesCmd = &cobra.Command{
 	Short: "All the messages from all clients on the server",
 
 	Run: func(cmd *cobra.Command, args []string) {
-		broadCastServer.GetAllClients()
+		messages := database.GetAllMessages()
+		fmt.Println("All historical messages from the server...")
+		fmt.Println("-------------------------------------------------------------------------------------")
+		for _, message := range messages {
+			formattedTime := message.Date.Format("02-01-2006")
+			text := fmt.Sprintf(" Date: %s ID: %s Text: %s", formattedTime, message.ClientId, message.Text)
+			fmt.Println(text)
+		}
 	},
 }
 

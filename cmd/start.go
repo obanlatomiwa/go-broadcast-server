@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"github.com/obanlatomiwa/go-broadcast-server/database"
 	broadCastServer "github.com/obanlatomiwa/go-broadcast-server/websocket"
 	"github.com/spf13/cobra"
 )
@@ -11,6 +12,8 @@ var startCmd = &cobra.Command{
 	Short: "start the broadcast server",
 
 	Run: func(cmd *cobra.Command, args []string) {
+		// set up DB
+		database.InitialiseDatabase()
 		broadCastServer.InitiateBroadCast()
 	},
 }

@@ -2,6 +2,7 @@ package websocket
 
 import (
 	"fmt"
+	"github.com/obanlatomiwa/go-broadcast-server/database"
 	"github.com/obanlatomiwa/go-broadcast-server/utils"
 	"log"
 	"net/http"
@@ -66,6 +67,7 @@ func (server *BroadCastServer) StartBroadCast() {
 			server.Lock()
 			// NB: Maps in Golang are not concurrency safe, so use a mutex to avoid race conditions
 			server.clients[client] = true
+			database.CreateClient(client.id)
 			log.Printf("Client registed to broadcast %s", client.id)
 			server.Unlock()
 
@@ -76,6 +78,7 @@ func (server *BroadCastServer) StartBroadCast() {
 		case client := <-server.unregister:
 			server.Lock()
 			if _, ok := server.clients[client]; ok {
+				database.UpdateClient(client.id)
 				close(client.send)
 				delete(server.clients, client)
 				log.Printf("Client unregister from broadcast %s", client.id)
@@ -85,6 +88,7 @@ func (server *BroadCastServer) StartBroadCast() {
 		case message := <-server.broadcast:
 			server.RLock()
 			server.messages = append(server.messages, message)
+			database.CreateItem(message.clientId, message.data)
 
 			// broadcast to all the clients
 			for client := range server.clients {
