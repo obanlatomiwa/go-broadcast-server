@@ -9,19 +9,19 @@ A server that can server messages to connected clients. It allows clients to con
   - `broadcast clients` - lists all the historical clients
   - `broadcast clients -o` - lists all the online clients
   - `broadcast messages` - returns all the historical messages
-  - `broadcast messages -c "clientId"` - returns all the historical messages from a client
   - `broadcast cleandb` - deletes all records of the broadcast server from the database.
 
 
 ## Technologies
 - Golang
 - Websocket
+- SQL
 - Go Routines
 
 ## Libraries
-| Libraries         | Purpose                     |
-|-------------------|-----------------------------|
-| Cobra             | For CLI                     |
-| Gorilla/websocket | For implementing Websockets |
+| Libraries         | Purpose         |
+|-------------------|-----------------|
+| Cobra             | For CLI         |
+| Gorilla/websocket | For Websockets  |      
 
 
